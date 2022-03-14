@@ -29,13 +29,13 @@ def bus_stations(request):
     paginator = Paginator(bus_stations_list, 10)
     page = paginator.get_page(current_page)
     if page.has_next():
-        get_query = {'page': current_page + 1}
+        get_query = {'page': page.next_page_number()}
         params = urllib.parse.urlencode(get_query)
         next_page_url = f'{reverse("bus_stations")}?{params}'
     else:
         next_page_url = None
     if page.has_previous():
-        get_query = {'page': current_page - 1}
+        get_query = {'page': page.previous_page_number()}
         params = urllib.parse.urlencode(get_query)
         prev_page_url = f'{reverse("bus_stations")}?{params}'
     else:
