@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from django.http import HttpResponse
+from django.shortcuts import render, reverse
 
 DATA = {
     'omlet': {
@@ -22,9 +23,32 @@ DATA = {
 # Напишите ваш обработчик. Используйте DATA как источник данных
 # Результат - render(request, 'calculator/index.html', context)
 # В качестве контекста должен быть передан словарь с рецептом:
-# context = {
-#   'recipe': {
-#     'ингредиент1': количество1,
-#     'ингредиент2': количество2,
-#   }
-# }
+
+
+def index(request):
+    pages = {}
+    data_keys = list(DATA.keys())
+    for k in data_keys:
+        recipe_url = {k: f'/{k}'}
+        pages.update(recipe_url)
+    context = {'pages': pages}
+    return render(request, 'calculator/menu.html', context)
+
+
+def get_recipe(request, menu):
+    count = request.GET.get('servings')
+    if count:
+        try:
+            count = int(count)
+        except ValueError or TypeError:
+            print('Значение servings должно быть типа integer')
+            count = 1
+    else:
+        count = 1
+    recipe = DATA[menu].copy()
+    for ingredient in recipe.keys():
+        recipe[ingredient] = recipe[ingredient] * count
+    context = {
+        'recipe': recipe
+    }
+    return render(request, 'calculator/index.html', context)
