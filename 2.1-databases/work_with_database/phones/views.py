@@ -10,11 +10,11 @@ def show_catalog(request):
     phones = Phone.objects.all()
     sort_ = request.GET.get('sort')
     if sort_ == 'name':
-        phones = sorted(phones, key=lambda d: d.name)
+        phones = sorted(phones, key=lambda p: p.name)
     elif sort_ == 'min_price':
-        phones = sorted(phones, key=lambda d: d.price)
+        phones = sorted(phones, key=lambda p: p.price)
     elif sort_ == 'min_price':
-        phones = sorted(phones, key=lambda d: d.price, reverse=True)
+        phones = sorted(phones, key=lambda p: p.price, reverse=True)
     template = 'catalog.html'
     context = {'phones': phones}
     return render(request, template, context)

@@ -7,17 +7,20 @@
         <div class="header">
             <h1><a href="/books">Каталог</a></h1>
         </div>
-        <div class="row">
-            <div class="book col-md-4">
-                <h2>Сияние</h2>
-                <p>Автор: Стивен Кинг</p>
-                <p>Дата публикации: 2018-09-10</p>
+        {% for book in books %}
+            <div class="row">
+                <div class="book col-md-4">
+                    <h2>{{ book.name }}</h2>
+                    <p>Автор: {{ book.author }}</p>
+                    <p>Дата публикации: {{ book.pub_date }}</p>
+                </div>
             </div>
-            <div class="book col-md-4">
-                <h2>1984</h2>
-                <p>Автор: Джордж Оруэл</p>
-                <p>Дата публикации: 2015-03-11</p>
-            </div>
-        </div>
+        {% endfor %}
+        {% if prev_page %}
+        <a href="{% url "books" date=prev_page %}"> < {{ prev_page }}</a>
+        {% endif %}
+        {% if next_page %}
+        <a style="margin-left: 50px" href="{% url "books" date=next_page %}"> {{ next_page }} ></a>
+        {% endif %}
     </div>
 {% endblock %}
