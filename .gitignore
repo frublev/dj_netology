@@ -17,3 +17,4 @@ settings_local.py
 
 ### OS specific ###
 .DS_Store
+/3.1-drf-intro/smart_home/media/syn3.jpg
