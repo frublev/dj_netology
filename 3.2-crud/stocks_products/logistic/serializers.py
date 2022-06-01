@@ -16,6 +16,11 @@ class ProductPositionSerializer(serializers.ModelSerializer):
         fields = ['product', 'quantity', 'price']
         # depth = 2
 
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['product'] = ProductSerializer(instance.product).data
+        return representation
+
 
 class StockSerializer(serializers.ModelSerializer):
     positions = ProductPositionSerializer(many=True)
@@ -25,15 +30,13 @@ class StockSerializer(serializers.ModelSerializer):
         fields = ['id', 'address', 'positions']
 
     def create(self, validated_data):
-        print(validated_data)
         positions = validated_data.pop('positions')
-        print(positions)
 
         stock = super().create(validated_data)
 
         for p in positions:
             StockProduct.objects.update_or_create(
-                stock=stock, product=p['product'], quantity=p['quantity'], price=p['price']
+                stock=stock, product=p['product'], defaults={'quantity': p['quantity'], 'price': p['price']}
             )
 
         return stock
@@ -45,7 +48,7 @@ class StockSerializer(serializers.ModelSerializer):
 
         for p in positions:
             StockProduct.objects.update_or_create(
-                stock=stock, product=p['product'], quantity=p['quantity'], price=p['price']
+                stock=stock, product=p['product'], defaults={'quantity': p['quantity'], 'price': p['price']}
             )
 
         return stock
